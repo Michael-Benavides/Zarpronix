@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zarpronix v1.0 - Gestión de Bodega</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="pantallaLogin">
+        <div class="login-card">
+            <div class="mb-4">
+                <i class="bi bi-shield-lock-fill text-primary" style="font-size: 3.5rem;"></i>
+                <h2 class="fw-bold mt-2">ZARPRONIX</h2>
+                <p class="text-muted small">Control de Inventarios Profesional</p>
+            </div>
+            <div class="text-start mb-3">
+                <label class="form-label fw-bold">Usuario</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                    <input type="text" id="userInput" class="form-control" placeholder="admin">
+                </div>
+            </div>
+            <div class="text-start mb-4">
+                <label class="form-label fw-bold">Contraseña</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-key"></i></span>
+                    <input type="password" id="passInput" class="form-control" placeholder="••••••••">
+                </div>
+            </div>
+            <button onclick="iniciarSesion()" class="btn btn-primary btn-lg w-100 shadow">ACCEDER AL SISTEMA</button>
+        </div>
+    </div>
+
+    <div id="interfazSistema" style="display:none;">
+        <div class="sidebar shadow">
+            <div class="p-4 text-center">
+                <h3 class="fw-bold mb-0">ZARPRONIX</h3>
+                <span class="badge bg-info text-dark">v1.0 Pro</span>
+            </div>
+            <div class="user-badge text-truncate">
+                <i class="bi bi-person-circle text-primary me-2"></i>
+                <span id="labelUsuario" class="fw-bold text-white"></span>
+            </div>
+            <hr class="mx-3 opacity-25">
+            <nav class="nav flex-column mt-3">
+                <a id="linkCat" class="nav-link active" onclick="verSeccion('secCatalogo', this)"><i class="bi bi-pencil-square me-3"></i>Catálogo</a>
+                <a id="linkMov" class="nav-link" onclick="verSeccion('secMovimientos', this)"><i class="bi bi-arrow-left-right me-3"></i>Movimientos</a>
+                <a id="linkInv" class="nav-link" onclick="verSeccion('secInventario', this)"><i class="bi bi-boxes me-3"></i>Inventario Real</a>
+                <a id="linkFac" class="nav-link" onclick="verSeccion('secFactura', this)"><i class="bi bi-receipt me-3"></i>Facturación</a>
+            </nav>
+            <button class="btn btn-outline-danger mx-4 mt-5 btn-sm no-print" onclick="location.reload()">Salir</button>
+        </div>
+
+        <div class="main-content">
+            <div id="secCatalogo" class="seccion" style="display: block;">
+                <h2 class="fw-bold mb-4 text-dark">Registro de Productos</h2>
+                <div class="card card-custom p-4">
+                    <input type="hidden" id="prodId">
+                    <div class="row g-3">
+                        <div class="col-md-4"><label class="fw-bold">SKU / Código</label><input type="text" id="sku" class="form-control" placeholder="ZAR-001"></div>
+                        <div class="col-md-8"><label class="fw-bold">Nombre del Producto</label><input type="text" id="nombre" class="form-control"></div>
+                        
+                        <div class="col-md-4">
+                            <label class="fw-bold">Categoría</label>
+                            <select id="categoria" class="form-select">
+                                <option value="Suministros Esenciales">Suministros Esenciales</option>
+                                <option value="Bienes de Consumo Diario">Bienes de Consumo Diario</option>
+                                <option value="Artículos de Mantenimiento">Artículos de Mantenimiento</option>
+                                <option value="Materias Primas">Materias Primas</option>
+                                <option value="Productos Especializados">Productos Especializados</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4"><label class="fw-bold">Precio Unitario ($)</label><input type="number" id="precio" class="form-control" step="0.01"></div>
+                        
+                        <div class="col-md-4">
+                            <label class="fw-bold">Stock Actual / Inicial</label>
+                            <input type="number" id="stockInicial" class="form-control" placeholder="0">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="fw-bold">Ubicación en Estantería</label>
+                            <select id="ubicacion" class="form-select">
+                                <option value="Estantería de Carga Pesada">Estantería de Carga Pesada (Racks)</option>
+                                <option value="Estantería Convencional">Estantería Convencional (Ligera)</option>
+                                <option value="Estantería para Picking">Estantería para Picking</option>
+                                <option value="Contenedores Apilables">Contenedores Apilables</option>
+                                <option value="Almacenamiento en Frío">Cámara de Frío</option>
+                            </select>
+                        </div>
+                        <div class="col-12 mt-4 text-end">
+                            <button id="btnGuardar" onclick="guardarProducto()" class="btn btn-primary px-5 fw-bold">Guardar Cambios</button>
+                            <button id="btnCancelar" onclick="limpiarCatalogo()" class="btn btn-secondary ms-2" style="display:none;">Cancelar Edición</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="secMovimientos" class="seccion">
+                <h2 class="fw-bold mb-4">Entradas y Salidas (Kardex)</h2>
+                <div class="card card-custom p-4 shadow-lg" style="max-width: 500px; border-top: 5px solid #198754;">
+                    <div class="mb-3"><label class="fw-bold">ID del Producto</label><input type="number" id="movProdId" class="form-control"></div>
+                    <div class="mb-3"><label class="fw-bold">Tipo de Operación</label><select id="movTipo" class="form-select"><option value="ENTRADA">ENTRADA (+)</option><option value="SALIDA">SALIDA (-)</option></select></div>
+                    <div class="mb-4"><label class="fw-bold">Cantidad de Unidades</label><input type="number" id="movCant" class="form-control"></div>
+                    <button onclick="procesarKardex()" class="btn btn-dark w-100 py-2 fw-bold">PROCESAR MOVIMIENTO</button>
+                </div>
+            </div>
+
+            <div id="secInventario" class="seccion">
+                <h2 class="fw-bold mb-4 text-dark">Stock Actualizado</h2>
+                <div class="table-responsive bg-white p-3 rounded shadow-sm card-custom">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-dark"><tr><th>ID</th><th>SKU</th><th>Producto</th><th>Categoría</th><th>Precio</th><th>Stock</th><th class="text-center">Acciones</th></tr></thead>
+                        <tbody id="tablaInventario"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="secFactura" class="seccion">
+                <div class="d-flex justify-content-between mb-4">
+                    <h2 class="fw-bold">Documento de Operación</h2>
+                    <button class="btn btn-outline-primary no-print" onclick="window.print()"><i class="bi bi-printer me-2"></i>Imprimir</button>
+                </div>
+                <div id="areaFactura" class="factura-box shadow"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
