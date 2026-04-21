@@ -2,11 +2,17 @@
     --sidebar-color: #1a252f;
     --primary-blue: #3498db;
     --bg-light: #f4f7f6;
+    --accent-warning: #f1c40f;
+    --accent-danger: #e74c3c;
 }
 
-body { background: var(--bg-light); font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+body { 
+    background: var(--bg-light); 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    overflow-x: hidden; 
+}
 
-/* LOGIN */
+/* --- LOGIN --- */
 #pantallaLogin {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: linear-gradient(135deg, #1a252f 0%, #2c3e50 100%);
@@ -19,7 +25,7 @@ body { background: var(--bg-light); font-family: 'Segoe UI', sans-serif; overflo
     text-align: center;
 }
 
-/* SIDEBAR */
+/* --- SIDEBAR --- */
 .sidebar { 
     background: var(--sidebar-color); min-height: 100vh; color: white; 
     position: fixed; width: 260px; z-index: 1000;
@@ -28,30 +34,86 @@ body { background: var(--bg-light); font-family: 'Segoe UI', sans-serif; overflo
 .user-badge {
     background: rgba(255,255,255,0.08); padding: 12px; border-radius: 12px;
     margin: 15px; border-left: 4px solid var(--primary-blue);
+    font-size: 0.9rem;
 }
 
 .nav-link { 
-    color: #bdc3c7; cursor: pointer; margin: 8px 15px; 
+    color: #bdc3c7; cursor: pointer; margin: 4px 15px; 
     border-radius: 10px; padding: 12px; display: flex; align-items: center;
+    transition: all 0.3s ease;
 }
 
-.nav-link:hover { background: rgba(255,255,255,0.1); color: white; }
+.nav-link:hover { background: rgba(255,255,255,0.1); color: white; transform: translateX(5px); }
 .nav-link.active { background: var(--primary-blue); color: white; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3); }
 
-/* CONTENIDO */
+/* --- CONTENIDO --- */
 .main-content { margin-left: 260px; padding: 40px; }
-.card-custom { border: none; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
 .seccion { display: none; animation: fadeIn 0.4s ease; }
 
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* FACTURA */
-.factura-box {
-    background: white; padding: 50px; border-radius: 8px; border: 1px solid #ddd;
-    max-width: 750px; margin: auto;
+/* --- TABLAS GENERALES --- */
+.table { border-radius: 10px; overflow: hidden; }
+.table thead { background-color: var(--sidebar-color); color: white; }
+
+/* --- CHATBOT IA --- */
+#chatbot-container { position: fixed; bottom: 25px; right: 25px; z-index: 2000; }
+
+#chatbot-toggle {
+    width: 60px; height: 60px; border-radius: 50%; background: var(--primary-blue);
+    color: white; border: none; font-size: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
+#chatbot-window {
+    width: 320px; height: 450px; background: white; border-radius: 15px;
+    display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    margin-bottom: 15px; overflow: hidden;
+}
+
+.chatbot-header {
+    background: var(--sidebar-color); color: white; padding: 15px;
+    display: flex; justify-content: space-between; align-items: center;
+}
+
+.chatbot-header button { background: none; border: none; color: white; }
+
+#chatbot-messages { 
+    flex: 1; padding: 15px; overflow-y: auto; 
+    background: #f9f9f9; display: flex; flex-direction: column; 
+}
+
+.msg { margin-bottom: 12px; padding: 10px; border-radius: 12px; max-width: 85%; font-size: 0.85rem; }
+.user-msg { background: var(--primary-blue); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+
+/* Mensaje del Bot mejorado para Tablas */
+.bot-msg { 
+    background: #e9ecef; color: #333; align-self: flex-start; 
+    border-bottom-left-radius: 2px; max-width: 92%; 
+}
+
+/* --- ESTILOS PARA TABLAS DENTRO DEL CHAT --- */
+.bot-msg table {
+    display: block; width: 100%; overflow-x: auto;
+    border-collapse: collapse; margin-top: 10px;
+    background: white; font-size: 0.75rem;
+    border-radius: 5px;
+}
+
+.bot-msg table th, .bot-msg table td {
+    border: 1px solid #dee2e6; padding: 6px 8px;
+    text-align: left; white-space: nowrap;
+}
+
+.bot-msg table th {
+    background-color: var(--sidebar-color); color: white;
+}
+
+.chatbot-input { display: flex; padding: 10px; border-top: 1px solid #eee; background: white; }
+.chatbot-input input { flex: 1; border: none; outline: none; padding: 5px; }
+.chatbot-input button { background: none; border: none; color: var(--primary-blue); font-size: 1.2rem; }
+
+/* --- PRINT --- */
 @media print {
-    .sidebar, .no-print, #pantallaLogin { display: none !important; }
+    .sidebar, .no-print, #pantallaLogin, #chatbot-container { display: none !important; }
     .main-content { margin-left: 0; padding: 0; }
 }

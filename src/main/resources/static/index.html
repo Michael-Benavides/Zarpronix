@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zarpronix v1.0 - Gestión de Bodega</title>
+    <title>Zarpronix v1.0 - Gestión Profesional</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <div id="pantallaLogin">
         <div class="login-card">
-            <div class="mb-4">
+            <div class="mb-4 text-center">
                 <i class="bi bi-shield-lock-fill text-primary" style="font-size: 3.5rem;"></i>
                 <h2 class="fw-bold mt-2">ZARPRONIX</h2>
                 <p class="text-muted small">Control de Inventarios Profesional</p>
@@ -42,94 +42,257 @@
                 <h3 class="fw-bold mb-0">ZARPRONIX</h3>
                 <span class="badge bg-info text-dark">v1.0 Pro</span>
             </div>
-            <div class="user-badge text-truncate">
+            <div class="user-badge p-3">
                 <i class="bi bi-person-circle text-primary me-2"></i>
-                <span id="labelUsuario" class="fw-bold text-white"></span>
+                <span id="labelUsuario" class="fw-bold text-white small"></span>
             </div>
             <hr class="mx-3 opacity-25">
             <nav class="nav flex-column mt-3">
-                <a id="linkCat" class="nav-link active" onclick="verSeccion('secCatalogo', this)"><i class="bi bi-pencil-square me-3"></i>Catálogo</a>
-                <a id="linkMov" class="nav-link" onclick="verSeccion('secMovimientos', this)"><i class="bi bi-arrow-left-right me-3"></i>Movimientos</a>
-                <a id="linkInv" class="nav-link" onclick="verSeccion('secInventario', this)"><i class="bi bi-boxes me-3"></i>Inventario Real</a>
-                <a id="linkFac" class="nav-link" onclick="verSeccion('secFactura', this)"><i class="bi bi-receipt me-3"></i>Facturación</a>
+                <a class="nav-link active" onclick="verSeccion('secCatalogo', this)">
+                    <i class="bi bi-pencil-square me-3"></i>Registro
+                </a>
+                <a class="nav-link" onclick="verSeccion('secMovimientos', this)">
+                    <i class="bi bi-arrow-left-right me-3"></i>Kardex
+                </a>
+                <a class="nav-link" onclick="verSeccion('secDatabase', this)">
+                    <i class="bi bi-database-fill-check me-3"></i>Base de Datos
+                </a>
+                <a class="nav-link" onclick="verSeccion('secClientes', this)">
+                    <i class="bi bi-person-plus me-3"></i>Nuevo Cliente
+                </a>
+                <a class="nav-link" onclick="verSeccion('secProveedores', this)">
+                    <i class="bi bi-truck-flatbed me-3"></i>Nuevo Prov.
+                </a>
+                <a class="nav-link" onclick="verSeccion('secFactura', this)">
+                    <i class="bi bi-receipt me-3"></i>Facturación
+                </a>
             </nav>
-            <button class="btn btn-outline-danger mx-4 mt-5 btn-sm no-print" onclick="location.reload()">Salir</button>
+            <button class="btn btn-outline-danger mx-4 mt-5 btn-sm" onclick="location.reload()">Salir</button>
         </div>
 
-        <div class="main-content">
-            <div id="secCatalogo" class="seccion" style="display: block;">
+        <div class="main-content p-4">
+            
+            <div id="secCatalogo" class="seccion">
                 <h2 class="fw-bold mb-4 text-dark">Registro de Productos</h2>
-                <div class="card card-custom p-4">
+                <div class="card p-4 shadow-sm border-0">
                     <input type="hidden" id="prodId">
                     <div class="row g-3">
-                        <div class="col-md-4"><label class="fw-bold">SKU / Código</label><input type="text" id="sku" class="form-control" placeholder="ZAR-001"></div>
-                        <div class="col-md-8"><label class="fw-bold">Nombre del Producto</label><input type="text" id="nombre" class="form-control"></div>
-                        
                         <div class="col-md-4">
-                            <label class="fw-bold">Categoría</label>
+                            <label class="fw-bold small">SKU</label>
+                            <input type="text" id="sku" class="form-control">
+                        </div>
+                        <div class="col-md-8">
+                            <label class="fw-bold small">Nombre del Producto</label>
+                            <input type="text" id="nombre" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="fw-bold small">Categoría</label>
                             <select id="categoria" class="form-select">
-                                <option value="Suministros Esenciales">Suministros Esenciales</option>
-                                <option value="Bienes de Consumo Diario">Bienes de Consumo Diario</option>
-                                <option value="Artículos de Mantenimiento">Artículos de Mantenimiento</option>
-                                <option value="Materias Primas">Materias Primas</option>
-                                <option value="Productos Especializados">Productos Especializados</option>
+                                <option>Suministros Esenciales</option>
+                                <option>Bienes de Consumo Diario</option>
                             </select>
                         </div>
-                        <div class="col-md-4"><label class="fw-bold">Precio Unitario ($)</label><input type="number" id="precio" class="form-control" step="0.01"></div>
-                        
                         <div class="col-md-4">
-                            <label class="fw-bold">Stock Actual / Inicial</label>
-                            <input type="number" id="stockInicial" class="form-control" placeholder="0">
+                            <label class="fw-bold small">Precio Unitario ($)</label>
+                            <input type="number" id="precio" class="form-control" step="0.01">
                         </div>
-
-                        <div class="col-12">
-                            <label class="fw-bold">Ubicación en Estantería</label>
-                            <select id="ubicacion" class="form-select">
-                                <option value="Estantería de Carga Pesada">Estantería de Carga Pesada (Racks)</option>
-                                <option value="Estantería Convencional">Estantería Convencional (Ligera)</option>
-                                <option value="Estantería para Picking">Estantería para Picking</option>
-                                <option value="Contenedores Apilables">Contenedores Apilables</option>
-                                <option value="Almacenamiento en Frío">Cámara de Frío</option>
-                            </select>
+                        <div class="col-md-4">
+                            <label class="fw-bold small">Stock Inicial</label>
+                            <input type="number" id="cantidad" class="form-control">
                         </div>
-                        <div class="col-12 mt-4 text-end">
-                            <button id="btnGuardar" onclick="guardarProducto()" class="btn btn-primary px-5 fw-bold">Guardar Cambios</button>
-                            <button id="btnCancelar" onclick="limpiarCatalogo()" class="btn btn-secondary ms-2" style="display:none;">Cancelar Edición</button>
+                        <div class="col-12 text-end mt-4">
+                            <button onclick="guardarProducto()" class="btn btn-primary px-5 fw-bold">GUARDAR EN INVENTARIO</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="secMovimientos" class="seccion">
-                <h2 class="fw-bold mb-4">Entradas y Salidas (Kardex)</h2>
-                <div class="card card-custom p-4 shadow-lg" style="max-width: 500px; border-top: 5px solid #198754;">
-                    <div class="mb-3"><label class="fw-bold">ID del Producto</label><input type="number" id="movProdId" class="form-control"></div>
-                    <div class="mb-3"><label class="fw-bold">Tipo de Operación</label><select id="movTipo" class="form-select"><option value="ENTRADA">ENTRADA (+)</option><option value="SALIDA">SALIDA (-)</option></select></div>
-                    <div class="mb-4"><label class="fw-bold">Cantidad de Unidades</label><input type="number" id="movCant" class="form-control"></div>
-                    <button onclick="procesarKardex()" class="btn btn-dark w-100 py-2 fw-bold">PROCESAR MOVIMIENTO</button>
+            <div id="secMovimientos" class="seccion" style="display:none;">
+                <h2 class="fw-bold mb-4">Entradas y Salidas de Mercancía</h2>
+                <div class="card p-4 shadow-sm border-0" style="max-width: 500px;">
+                    <div class="mb-3">
+                        <label class="fw-bold">ID del Producto</label>
+                        <input type="number" id="movProdId" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="fw-bold">Tipo de Operación</label>
+                        <select id="movTipo" class="form-select">
+                            <option value="ENTRADA">ENTRADA (+)</option>
+                            <option value="SALIDA">SALIDA (-)</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="fw-bold">Cantidad a Mover</label>
+                        <input type="number" id="movCant" class="form-control">
+                    </div>
+                    <button onclick="procesarKardex()" class="btn btn-dark w-100 fw-bold">PROCESAR MOVIMIENTO</button>
                 </div>
             </div>
 
-            <div id="secInventario" class="seccion">
-                <h2 class="fw-bold mb-4 text-dark">Stock Actualizado</h2>
-                <div class="table-responsive bg-white p-3 rounded shadow-sm card-custom">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-dark"><tr><th>ID</th><th>SKU</th><th>Producto</th><th>Categoría</th><th>Precio</th><th>Stock</th><th class="text-center">Acciones</th></tr></thead>
-                        <tbody id="tablaInventario"></tbody>
-                    </table>
+            <div id="secDatabase" class="seccion" style="display:none;">
+                <h2 class="fw-bold mb-4">Central de Datos Zarpronix</h2>
+                <ul class="nav nav-tabs mb-4" id="tabsDatos" role="tablist">
+                    <li class="nav-item">
+                        <button class="nav-link active fw-bold" data-bs-toggle="tab" data-bs-target="#pane-inv">INVENTARIO</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link fw-bold" data-bs-toggle="tab" data-bs-target="#pane-cli">CLIENTES</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link fw-bold" data-bs-toggle="tab" data-bs-target="#pane-prov">PROVEEDORES</button>
+                    </li>
+                </ul>
+                <div class="tab-content bg-white p-3 border rounded shadow-sm">
+                    <div class="tab-pane fade show active" id="pane-inv">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>SKU</th>
+                                        <th>Producto</th>
+                                        <th>Categoría</th>
+                                        <th>Precio</th>
+                                        <th>Stock</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaInventario"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="pane-cli">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Cédula</th>
+                                        <th>Teléfono</th>
+                                        <th>Email</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaClientes"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="pane-prov">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Empresa</th>
+                                        <th>RUC</th>
+                                        <th>Contacto</th>
+                                        <th>Dirección</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaProveedores"></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div id="secFactura" class="seccion">
-                <div class="d-flex justify-content-between mb-4">
-                    <h2 class="fw-bold">Documento de Operación</h2>
-                    <button class="btn btn-outline-primary no-print" onclick="window.print()"><i class="bi bi-printer me-2"></i>Imprimir</button>
+            <div id="secClientes" class="seccion" style="display:none;">
+                <h2 class="fw-bold mb-4">Registro de Clientes</h2>
+                <div class="card p-4 shadow-sm border-0">
+                    <input type="hidden" id="cliId">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="fw-bold">Nombre Completo</label>
+                            <input type="text" id="cliNombre" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="fw-bold">Cédula / ID</label>
+                            <input type="text" id="cliCedula" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="fw-bold">Teléfono</label>
+                            <input type="text" id="cliTelefono" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="fw-bold">Correo Electrónico</label>
+                            <input type="email" id="cliEmail" class="form-control">
+                        </div>
+                        <div class="col-12 text-end mt-3">
+                            <button onclick="guardarCliente()" class="btn btn-success px-5 fw-bold">REGISTRAR CLIENTE</button>
+                        </div>
+                    </div>
                 </div>
-                <div id="areaFactura" class="factura-box shadow"></div>
+            </div>
+
+            <div id="secProveedores" class="seccion" style="display:none;">
+                <h2 class="fw-bold mb-4">Registro de Proveedores</h2>
+                <div class="card p-4 shadow-sm border-0">
+                    <input type="hidden" id="provId">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="fw-bold">Nombre de la Empresa</label>
+                            <input type="text" id="provEmpresa" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="fw-bold">RUC</label>
+                            <input type="text" id="provRuc" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="fw-bold">Persona de Contacto</label>
+                            <input type="text" id="provContacto" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="fw-bold">Dirección Física</label>
+                            <input type="text" id="provDireccion" class="form-control">
+                        </div>
+                        <div class="col-12 text-end mt-3">
+                            <button onclick="guardarProveedor()" class="btn btn-warning px-5 fw-bold">REGISTRAR PROVEEDOR</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="secFactura" class="seccion" style="display:none;">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="fw-bold mb-0">Documento de Salida / Factura</h2>
+                    <button class="btn btn-outline-primary no-print" onclick="window.print()">
+                        <i class="bi bi-printer me-2"></i>Imprimir Documento
+                    </button>
+                </div>
+                <div id="areaFactura" class="factura-box shadow-sm bg-white p-5 rounded border">
+                    <div class="text-center text-muted py-5">
+                        <i class="bi bi-receipt-cutoff" style="font-size: 3rem;"></i>
+                        <p class="mt-3">No hay datos para mostrar. Realice una operación en el Kardex o Facturación.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <div id="chatbot-container" class="no-print">
+        <div id="chatbot-window" style="display: none;">
+            <div class="chatbot-header">
+                <span><i class="bi bi-robot me-2"></i>Zarpro-Bot</span>
+                <button onclick="toggleChat()"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div id="chatbot-messages"></div>
+            <div class="chatbot-input">
+                <input type="text" id="botInput" placeholder="Pregunta algo..." onkeypress="if(event.key==='Enter') enviarMensajeBot()">
+                <button onclick="enviarMensajeBot()"><i class="bi bi-send-fill"></i></button>
+            </div>
+        </div>
+        <button id="chatbot-toggle" onclick="toggleChat()">
+            <i class="bi bi-chat-dots-fill"></i>
+        </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script src="js/config.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/inventario.js"></script>
+    <script src="js/bot.js"></script>
+    <script src="js/auth.js"></script>
+
 </body>
 </html>

@@ -1,46 +1,52 @@
 package Zarpronix.infrastructure.rest;
 
-import Zarpronix.domain.model.Producto;
-import Zarpronix.infrastructure.persistence.IProductoRepository;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.transaction.annotation.Transactional; // <--- NUEVO IMPORT
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import Zarpronix.domain.model.Producto;
+import Zarpronix.infrastructure.persistence.IProductoRepository;
 
 @RestController
 @RequestMapping("/api/productos")
 @CrossOrigin(origins = "*")
+@SuppressWarnings("null") // Elimina las advertencias de "Null type safety"
 public class ProductoController {
 
     @Autowired
     private IProductoRepository productoRepo;
 
-    // 1. LISTAR TODOS LOS PRODUCTOS
     @GetMapping
     public List<Producto> listar() {
         return productoRepo.findAll();
     }
 
-    // 2. BUSCAR UN PRODUCTO POR ID
     @GetMapping("/{id}")
     public ResponseEntity<Producto> obtenerPorId(@PathVariable Long id) {
+        if (id == null) return ResponseEntity.badRequest().build();
         return productoRepo.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // 3. CREAR NUEVO PRODUCTO (POST)
     @PostMapping
     public Producto guardar(@RequestBody Producto producto) {
-        if (producto.getCantidad() == null) {
-            producto.setCantidad(0);
-        }
+        if (producto.getCantidad() == null) producto.setCantidad(0);
+        if (producto.getPrecio() == null) producto.setPrecio(0.0);
         return productoRepo.save(producto);
     }
 
-    // 4. ACTUALIZAR PRODUCTO EXISTENTE (PUT)
     @PutMapping("/{id}")
     public ResponseEntity<Producto> actualizar(@PathVariable Long id, @RequestBody Producto datosNuevos) {
         return productoRepo.findById(id).map(productoExistente -> {
@@ -49,28 +55,20 @@ public class ProductoController {
             productoExistente.setCategoria(datosNuevos.getCategoria());
             productoExistente.setPrecio(datosNuevos.getPrecio());
             productoExistente.setUbicacion(datosNuevos.getUbicacion());
-
             if (datosNuevos.getCantidad() != null) {
                 productoExistente.setCantidad(datosNuevos.getCantidad());
             }
-
-            Producto actualizado = productoRepo.save(productoExistente);
-            return ResponseEntity.ok(actualizado);
+            return ResponseEntity.ok(productoRepo.save(productoExistente));
         }).orElse(ResponseEntity.notFound().build());
     }
 
-    // 5. ELIMINAR PRODUCTO (MODIFICADO CON TRANSACCIÓN)
-    @Transactional // <--- MODIFICACIÓN CLAVE
+    @Transactional
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        if (!productoRepo.existsById(id)) {
+        if (id == null || !productoRepo.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
-        try {
-            productoRepo.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
+        productoRepo.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
