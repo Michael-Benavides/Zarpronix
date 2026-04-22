@@ -1,0 +1,8 @@
+git init
+git add .
+git commit -m "feat: carga inicial del proyecto SGID - Estructura Base"
+/target/
+*.class
+.idea/
+*.iml
+.vscode/
