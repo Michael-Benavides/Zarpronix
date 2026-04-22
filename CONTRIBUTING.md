@@ -1,22 +1,17 @@
-# Guía de Contribución - Proyecto Zarpronix
+# Guía de Contribución y Estándares - Zarpronix
 
-Para asegurar que el Sistema de Gestión de Inventarios (SGID) sea de alta calidad, todos los integrantes del equipo (Paralelo BM) deben seguir estas reglas:
+Para asegurar la calidad del proyecto de Ingeniería de Software, todo el equipo debe seguir estas normas:
 
-## 1. Flujo de Trabajo (GitHub Flow)
-- No realizar cambios directamente en la rama `main`.
-- Cada nueva funcionalidad debe ir en una rama separada (ejemplo: `feature/gestion-clientes`).
-- Antes de unir el código a la rama principal, se debe realizar una revisión.
+## 1. Nomenclatura de Código
+- **Java:** Usar `PascalCase` para clases e interfaces, `camelCase` para métodos y variables, y `SCREAMING_SNAKE_CASE` para constantes.
+- **Base de Datos:** Usar `snake_case` para tablas y columnas. Las tablas del módulo de auditoría deben llevar el prefijo `tbl_`.
 
-## 2. Estándares de Código Java
-- **Clases:** Usar PascalCase (ejemplo: `GestionInventario.java`).
-- **Métodos:** Usar camelCase (ejemplo: `validarRuc()`).
-- **Comentarios:** Documentar brevemente la lógica de negocio en la capa de Servicio.
+## 2. Gestión de Versiones (Commits)
+Se utilizará el formato **Conventional Commits**:
+- `feat(módulo): descripción` (Para nuevas funciones).
+- `fix: descripción` (Para corregir errores).
+- `docs: descripción` (Para cambios en documentación).
 
-## 3. Mensajes de Confirmación (Commits)
-Para que el historial sea claro, usaremos estos prefijos:
-- `feat:` cuando se agrega una nueva función.
-- `fix:` cuando se corrige un error.
-- `docs:` cuando se actualiza la documentación o el README.
-
-## 4. Contacto del Equipo
-- Líder de Proyecto: Michael Benavides.
+## 3. Documentación y Estilo
+- **Comentarios:** Uso obligatorio de **JavaDoc** en todos los métodos de la capa `Service`. Los comentarios *inline* se usarán solo para lógica compleja.
+- **Formato:** Se sigue la **Google Java Style Guide** con una indentación de 4 espacios, verificada mediante Checkstyle.
