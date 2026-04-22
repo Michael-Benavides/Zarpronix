@@ -1,7 +1,7 @@
 
 # SGID-JAVA - Sistema de Gestión de Inventarios de Bodegas
 
-**Autores:** Benavides Michael,David Tapia, Kevin Dias 
+**Autores:** Benavides Michael,David Tapia, Kevin Dias. 
 **Paralelo:** BM  
 **Institución:** Universidad Politécnica Estatal del Carchi (UPEC)  
 **Proyecto:** Módulo de Gestión de Clientes 
