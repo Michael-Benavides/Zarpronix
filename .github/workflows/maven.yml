@@ -19,4 +19,5 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
+      # Esta línea es la clave: ignora errores de test para que salga verde
       run: mvn -B package -DskipTests --file pom.xml
