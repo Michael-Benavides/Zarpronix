@@ -1,10 +1,12 @@
-# Etapa 1: Compilación (Maven construye el proyecto en Render)
+# Etapa 1: Compilación
 FROM maven:3.8.4-openjdk-17-slim AS build
+WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
-# Etapa 2: Ejecución (Se crea el contenedor final)
+# Etapa 2: Ejecución
 FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
-COPY --from=build /target/*.jar app.jar
+COPY --from=build /app/target/*.jar app.jar
+EXPOSE 8080
 ENTRYPOINT ["java","-jar","app.jar"]
