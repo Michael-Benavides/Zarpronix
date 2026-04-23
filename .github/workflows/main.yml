@@ -1,15 +1,17 @@
-name: Java CI
+name: CI - SGID Inventory System
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main, feature/* ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout código
+      - name: Checkout codigo
         uses: actions/checkout@v4
 
       - name: Configurar Java 17
@@ -22,4 +24,16 @@ jobs:
         run: chmod +x mvnw
 
       - name: Compilar proyecto
-        run: ./mvnw clean package
+        run: ./mvnw clean compile
+
+      - name: Ejecutar pruebas (con perfil test)
+        run: ./mvnw test -Dspring.profiles.active=test
+
+      - name: Empaquetar JAR
+        run: ./mvnw package -DskipTests
+
+      - name: Subir artefacto (opcional)
+        uses: actions/upload-artifact@v4
+        with:
+          name: sgid-jar
+          path: target/*.jar
